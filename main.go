@@ -9,40 +9,50 @@ import (
 )
 
 type User struct {
+	
 	Id          string
 	Name        string
 	DateOfBirth string
 	Friends     []User
+	
 }
 
 var Database []User
 
 func main() {
+	
     http.HandleFunc("/users/", getUser)
 	http.HandleFunc("/create/user", createUser)
 	http.HandleFunc("/", Home)
 	log.Fatal(http.ListenAndServe(":4300", nil))
 
-	
 }
 
 func Home(w http.ResponseWriter, r *http.Request) {
+	
 	user_proto_type := User{Id: "SomeLongHashValue", Name: "Your Name", DateOfBirth: "DD-MM-YYYY"}
 	data, err := json.MarshalIndent(user_proto_type, "", "    ")
 	if err != nil {
+		
 		log.Println(err)
+		
 	}
+	
 	log.Println("Home     ",r.URL.Path)
 	fmt.Fprintf(w, string(data))
 
 }
 
 func createUser(w http.ResponseWriter, r *http.Request) {
+	
 	log.Println("createUser     ",r.URL.Path)
 	err := r.ParseForm()
 	if err != nil {
+		
 		log.Println(w, "ParseForm error  %v\n", err)
+		
 	}
+	
 	id := r.FormValue("id")
 	name := r.FormValue("name")
 	date_of_birth := r.FormValue("date_of_birth")
@@ -53,7 +63,6 @@ func createUser(w http.ResponseWriter, r *http.Request) {
 		log.Println("Data \n", new_user)
 
 	}
-
 }
 
 func getUser(w http.ResponseWriter, r *http.Request) {
@@ -91,7 +100,4 @@ func getUser(w http.ResponseWriter, r *http.Request) {
 				  fmt.Fprintf(w, string(data))
 				} 
     }
-
-	
-
 }
